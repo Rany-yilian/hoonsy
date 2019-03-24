@@ -73,6 +73,7 @@ int main(int argc, char *argv[])
              header_parse(buf,strlen(buf));
 		printf("%s\n",http_format.type);
 		printf("%s\n",http_format.http_request_url);
+		printf("%s\n",http_format.http_version);
                printf("%s\n", buf);
 		
 			
@@ -152,6 +153,7 @@ int header_parse(char * buff,int length){
 		++stop1;
 		if(sscanf(new_buff,"HTTP/%[0-9].%[0-9]",v1,v2)==2){
 			strcat(v3,v1);
+			strcat(v3,".");
 			strcat(v3,v2);
 			strcpy(http_format.http_version,v3);
 		}

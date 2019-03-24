@@ -1,4 +1,3 @@
-
 http_server:http_server.o
 	gcc http_server.o -o http_server
 http_server.o:http_server.c
@@ -6,4 +5,3 @@ http_server.o:http_server.c
 .PHONY:clean
 clean:
 	rm -rf *.o
-
