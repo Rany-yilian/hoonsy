@@ -23,15 +23,32 @@ struct Node{//用链表结构进行存储
 	char * value;//请求头对应参数的值
 	struct Node *next;
 };
+
+struct Conf{//用链表结构存储配置
+	char * name;//请求头对应参数值的key
+	char * value;//请求头对应参数的值
+	struct Conf *next;
+};
 char * request_head;//代表请求行
 struct Node *new_link,*head;
-
+struct Conf *conf_link,*head_conf;
 
 struct Http_format http_format;
 int header_parse(char * buff,int len);
 void print_head(struct Node * head);
+void print_conf(struct Conf * head_conf);
+char * get_conf(char * key,struct Conf * head_conf);
+void conf_parse();
+
 int main(int argc, char *argv[])
 {
+	//配置
+    conf_link = (struct Conf *)malloc(sizeof(struct Conf *));
+	conf_link->next = NULL;
+	head_conf = conf_link;
+	//读取配置文件
+	conf_parse();
+	char * port = get_conf("Listen",head_conf);
     int server_sockfd;
     int client_sockfd;
     int len,pid;
@@ -42,7 +59,7 @@ int main(int argc, char *argv[])
     memset(&server_addr, 0, sizeof(server_addr)); 
     server_addr.sin_family = AF_INET; 
     server_addr.sin_addr.s_addr = INADDR_ANY; 
-    server_addr.sin_port = htons(8080); 
+    server_addr.sin_port = htons(atoi(port)); 
 
     if((server_sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
@@ -62,7 +79,8 @@ int main(int argc, char *argv[])
     listen(server_sockfd, 5);
 	printf("beginning listen...\n");
     sin_size = sizeof(struct sockaddr_in);
-   
+	
+
     for(;;)
     {
 		new_link = (struct Node *)malloc(sizeof(struct Node *));
@@ -218,6 +236,66 @@ int parse_header_request(char * buff){
 		//}
 	}
 	
+}
+
+void conf_parse(){
+	FILE * fp = NULL;
+	struct Conf * new_conf;
+	char *value,*index,*line,*start;
+	char ftemp[1024],fline[1024];
+	fp = fopen("conf/ylworld.conf","r+");
+	if(fp==NULL){
+		fopen("conf/ylworld.conf","w+");
+	}
+	//获取文件大小
+	//fseek(fp,0,SEEK_END);//将文件指针指向末尾
+	while(!feof(fp)){
+		fgets(fline,1024,fp);
+		line = fline;
+		while((index = strstr(line,":"))!=NULL){
+			value = (char *)malloc(100);
+			memcpy(value,line,index-line);
+			new_conf = (struct Conf *)malloc(sizeof(struct Conf *));
+			new_conf->name = value;//得到第一参数键
+			++index;
+			start = index;
+			while(*(++index)!='\n');//指向第一个回车符
+			value = (char *)malloc(100);
+			memcpy(value,start,index-start);
+			new_conf->value = value;//得到第一参数值
+			new_conf->next = NULL;
+			conf_link->next = new_conf;
+			conf_link = new_conf;
+			line = index;
+		}
+	}
+	fclose(fp);
+	
+}
+
+void print_conf(struct Conf * conf_head){
+	struct Conf * temp;
+	temp = conf_head->next;
+	printf("配置:\n");
+	while(temp){
+		printf("%s:",temp->name);
+		printf("%s",temp->value);
+		temp = temp->next;
+		printf("\n");
+	}
+	printf("配置结束\n");
+}
+
+char * get_conf(char * key,struct Conf * conf_head){
+	struct Conf * temp;
+	temp = conf_head->next;
+	while(temp){
+		if(!memcmp(temp->name,key,strlen(key))){
+			return temp->value;
+		}
+		temp = temp->next;
+	}
+	return NULL;
 }
 
 void print_head(struct Node * head){
