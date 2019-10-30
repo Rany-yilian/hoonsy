@@ -243,9 +243,9 @@ void conf_parse(){
 	struct Conf * new_conf;
 	char *value,*index,*line,*start;
 	char ftemp[1024],fline[1024];
-	fp = fopen("conf/ylworld.conf","r+");
+	fp = fopen("conf/http.conf","r+");
 	if(fp==NULL){
-		fopen("conf/ylworld.conf","w+");
+		fopen("conf/http.conf","w+");
 	}
 	//获取文件大小
 	//fseek(fp,0,SEEK_END);//将文件指针指向末尾
