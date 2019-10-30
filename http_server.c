@@ -330,6 +330,9 @@ int get_head_type(char * buff){
 	else if(!memcmp(buff,"DELETE",6)){
 		strcpy(http_format.type,"DELETE");
 	}
+    else if(!memcmp(buff,"CONNECT",7)){
+        strcpy(http_format.type,"CONNECT");
+    }
 	else if(!memcmp(buff,"OPTIONS",7)){
 		strcpy(http_format.type,"OPTIONS");
 	}
@@ -339,20 +342,17 @@ int get_head_type(char * buff){
 	else if(!memcmp(buff,"PATCH",5)){
 		strcpy(http_format.type,"PATCH");
 	}
-	else if(!memcmp(buff,"MOVE",5)){
+	else if(!memcmp(buff,"MOVE",4)){
 		strcpy(http_format.type,"MOVE");
 	}
 	else if(!memcmp(buff,"COPY",4)){
 		strcpy(http_format.type,"COPY");
 	}
-	else if(!memcmp(buff,"new_link",4)){
-		strcpy(http_format.type,"new_link");
+	else if(!memcmp(buff,"LINK",4)){
+		strcpy(http_format.type,"LINK");
 	}
-	else if(!memcmp(buff,"UNnew_link",6)){
-		strcpy(http_format.type,"UNnew_link");
-	}
-	else if(!memcmp(buff,"WRAPPED",7)){
-		strcpy(http_format.type,"WRAPPED");
+	else if(!memcmp(buff,"UNLINK",6)){
+		strcpy(http_format.type,"UNLINK");
 	}
 	else if(!memcmp(buff,"WRAPPED",7)){
 		strcpy(http_format.type,"WRAPPED");
