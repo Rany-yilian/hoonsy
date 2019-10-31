@@ -1,4 +1,4 @@
-http_server
+hoonsy
 ===============
 
 使用C来实现自己的http服务器，
@@ -24,7 +24,7 @@ http_server
 
 make
 
-./http_server
+./hoonsy
 
 
 ## 访问方式  
